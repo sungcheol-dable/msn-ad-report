@@ -13,6 +13,8 @@
 
 ---
 
+*Dashboard fix: JavaScript regex pattern updated for folder detection*
+
 ## 🔧 분석 도구 정보
 
 - **데이터 소스**: MySQL (ad_contents.MSN_AD_CARDS)

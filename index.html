@@ -76,7 +76,7 @@
                     const linkPath = match[2];
                     
                     // Only process folder links (not direct file links)
-                    if (linkPath.match(/^\d{3}_\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}/) && !linkPath.includes('.md')) {
+                    if (linkPath.match(/^\.\/?\d{3}_\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}/) && !linkPath.includes('.md')) {
                         try {
                             // Try to fetch the frontmatter from folder's index.md
                             const indexResponse = await fetch(`${linkPath}/index.md`);
@@ -95,7 +95,7 @@
                             }
                             
                             // Extract date range and network from folder name
-                            const folderMatch = linkPath.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
+                            const folderMatch = linkPath.replace(/^\.\//, '').match(/\d{3}_(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
                             const startDate = folderMatch ? folderMatch[1] : '';
                             const endDate = folderMatch ? folderMatch[2] : '';
                             const network = folderMatch && folderMatch[3] ? folderMatch[3] : 'All Networks';
@@ -111,7 +111,7 @@
                         } catch (error) {
                             console.warn(`Could not load frontmatter for ${linkPath}:`, error);
                             // Fallback: use folder name
-                            const folderMatch = linkPath.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
+                            const folderMatch = linkPath.replace(/^\.\//, '').match(/\d{3}_(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
                             const startDate = folderMatch ? folderMatch[1] : '';
                             const endDate = folderMatch ? folderMatch[2] : '';
                             const network = folderMatch && folderMatch[3] ? folderMatch[3] : 'All Networks';
