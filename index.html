@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSN Ad Report - Analysis Dashboard</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .report-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .report-card:hover { transform: translateY(-2px); }
+        .report-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; }
+        .report-meta { color: #666; font-size: 0.9em; margin-bottom: 15px; }
+        .view-button {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        .view-button:hover { background: #0052a3; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 MSN Ad Report Dashboard</h1>
+        <p>MSN 광고 네트워크 분석 리포트 대시보드</p>
+    </div>
+    
+    <div class="reports-grid" id="reports">
+        <p>Loading reports...</p>
+    </div>
+    
+    <script>
+        // Auto-generate report list from directory structure
+        fetch('index.md')
+            .then(response => response.text())
+            .then(content => {
+                const reports = [];
+                const lines = content.split('\n');
+                
+                lines.forEach(line => {
+                    const match = line.match(/\[(.+?)\]\((.+?)\)/);
+                    if (match && match[2].includes('_202')) {
+                        const title = match[1];
+                        const link = match[2];
+                        const dateMatch = title.match(/(\d{4}-\d{2}-\d{2})/g);
+                        const networkMatch = title.match(/_([^_]+)$/);
+                        
+                        reports.push({
+                            title: title,
+                            link: link,
+                            dates: dateMatch,
+                            network: networkMatch ? networkMatch[1] : 'All Networks'
+                        });
+                    }
+                });
+                
+                displayReports(reports);
+            })
+            .catch(() => {
+                document.getElementById('reports').innerHTML = 
+                    '<p>Report index를 로드할 수 없습니다. <a href="index.md">index.md</a>를 직접 확인해보세요.</p>';
+            });
+        
+        function displayReports(reports) {
+            const container = document.getElementById('reports');
+            if (reports.length === 0) {
+                container.innerHTML = '<p>아직 생성된 리포트가 없습니다.</p>';
+                return;
+            }
+            
+            container.innerHTML = reports.map(report => `
+                <div class="report-card">
+                    <div class="report-title">${report.title}</div>
+                    <div class="report-meta">
+                        📅 ${report.dates ? report.dates.join(' ~ ') : 'Date info unavailable'}<br>
+                        🌐 Network: ${report.network}
+                    </div>
+                    <a href="${report.link}" class="view-button">리포트 보기</a>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
