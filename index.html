@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSN Ad Report - Analysis Dashboard</title>
+    <title>MSN Ad Report Dashboard</title>
+    <meta name="description" content="MSN 광고 네트워크 분석 리포트 대시보드">
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -11,40 +12,199 @@
             margin: 0 auto; 
             padding: 20px;
             background: #f5f5f5;
+            line-height: 1.6;
         }
+        
         .header {
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             margin-bottom: 30px;
             text-align: center;
+            border: 1px solid #e1e5e9;
         }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        .header p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        .stats-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .stats-item {
+            display: inline-block;
+            margin: 0 20px;
+            color: #495057;
+        }
+        
+        .stats-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
         .reports-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
         }
+        
         .report-card {
             background: white;
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e1e5e9;
+            position: relative;
+            overflow: hidden;
         }
-        .report-card:hover { transform: translateY(-2px); }
-        .report-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; }
-        .report-meta { color: #666; font-size: 0.9em; margin-bottom: 15px; }
+        
+        .report-card:hover { 
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .report-title { 
+            font-size: 1.3rem; 
+            font-weight: 600; 
+            margin-bottom: 12px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .report-meta { 
+            color: #6c757d; 
+            font-size: 0.95rem; 
+            margin-bottom: 15px; 
+            line-height: 1.5;
+        }
+        
+        .report-description {
+            color: #495057;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .network-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        .network-badge.all-networks { background: #f3e5f5; color: #7b1fa2; }
+        .network-badge.popin { background: #e8f5e8; color: #388e3c; }
+        .network-badge.dable { background: #fff3e0; color: #f57c00; }
+        .network-badge.taboola { background: #fce4ec; color: #c2185b; }
+        .network-badge.vs { background: #e1f5fe; color: #0277bd; }
+        
         .view-button {
             display: inline-block;
-            background: #0066cc;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
-            padding: 8px 16px;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 0.9em;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
         }
-        .view-button:hover { background: #0052a3; }
+        
+        .view-button:hover { 
+            background: linear-gradient(135deg, #0056b3, #004085);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+        
+        .no-reports {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .no-reports h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.8rem; }
+            .reports-grid { grid-template-columns: 1fr; gap: 20px; }
+            .stats-item { display: block; margin: 10px 0; }
+        }
     </style>
 </head>
 <body>
@@ -53,113 +213,49 @@
         <p>MSN 광고 네트워크 분석 리포트 대시보드</p>
     </div>
     
-    <div class="reports-grid" id="reports">
-        <p>Loading reports...</p>
+    <div class="stats-bar">
+        <div class="stats-item">
+            <div class="stats-number">1</div>
+            <div>Total Reports</div>
+        </div>
+        <div class="stats-item">
+            <div class="stats-number">1 periods</div>
+            <div>Date Range</div>
+        </div>
+        <div class="stats-item">
+            <div class="stats-number">07/28</div>
+            <div>Last Updated</div>
+        </div>
     </div>
     
-    <script>
-        async function loadReports() {
-            try {
-                const reports = [];
-                
-                // Get all directories that match the pattern xxx_yyyy-mm-dd_yyyy-mm-dd
-                const response = await fetch('index.md');
-                const content = await response.text();
-                const lines = content.split('\n');
-                
-                // Extract folder links from index.md
-                const folderPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
-                let match;
-                
-                while ((match = folderPattern.exec(content)) !== null) {
-                    const linkText = match[1];
-                    const linkPath = match[2];
-                    
-                    // Only process folder links (not direct file links)
-                    if (linkPath.match(/^\.\/?\d{3}_\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}/) && !linkPath.includes('.md')) {
-                        try {
-                            // Try to fetch the frontmatter from folder's index.md
-                            const indexResponse = await fetch(`${linkPath}/index.md`);
-                            const indexContent = await indexResponse.text();
-                            
-                            // Extract frontmatter title
-                            const frontmatterMatch = indexContent.match(/^---\s*\n([\s\S]*?)\n---/);
-                            let title = linkText; // fallback to folder name
-                            
-                            if (frontmatterMatch) {
-                                const frontmatter = frontmatterMatch[1];
-                                const titleMatch = frontmatter.match(/^title:\s*(.+)$/m);
-                                if (titleMatch) {
-                                    title = titleMatch[1].replace(/['"]/g, '').trim();
-                                }
-                            }
-                            
-                            // Extract date range and network from folder name
-                            const folderMatch = linkPath.replace(/^\.\//, '').match(/\d{3}_(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
-                            const startDate = folderMatch ? folderMatch[1] : '';
-                            const endDate = folderMatch ? folderMatch[2] : '';
-                            const network = folderMatch && folderMatch[3] ? folderMatch[3] : 'All Networks';
-                            
-                            reports.push({
-                                title: title,
-                                link: `${linkPath}/index.md`,
-                                folder: linkPath,
-                                startDate: startDate,
-                                endDate: endDate,
-                                network: network
-                            });
-                        } catch (error) {
-                            console.warn(`Could not load frontmatter for ${linkPath}:`, error);
-                            // Fallback: use folder name
-                            const folderMatch = linkPath.replace(/^\.\//, '').match(/\d{3}_(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
-                            const startDate = folderMatch ? folderMatch[1] : '';
-                            const endDate = folderMatch ? folderMatch[2] : '';
-                            const network = folderMatch && folderMatch[3] ? folderMatch[3] : 'All Networks';
-                            
-                            reports.push({
-                                title: linkText,
-                                link: `${linkPath}/index.md`,
-                                folder: linkPath,
-                                startDate: startDate,
-                                endDate: endDate,
-                                network: network
-                            });
-                        }
-                    }
-                }
-                
-                // Sort reports by folder name (newest first)
-                reports.sort((a, b) => b.folder.localeCompare(a.folder));
-                
-                displayReports(reports);
-            } catch (error) {
-                console.error('Error loading reports:', error);
-                document.getElementById('reports').innerHTML = 
-                    '<p>Report index를 로드할 수 없습니다. <a href="index.md">index.md</a>를 직접 확인해보세요.</p>';
-            }
-        }
+    <div class="reports-grid" id="reports">
         
-        function displayReports(reports) {
-            const container = document.getElementById('reports');
-            if (reports.length === 0) {
-                container.innerHTML = '<p>아직 생성된 리포트가 없습니다.</p>';
-                return;
-            }
             
-            container.innerHTML = reports.map(report => `
-                <div class="report-card">
-                    <div class="report-title">${report.title}</div>
-                    <div class="report-meta">
-                        📅 ${report.startDate} ~ ${report.endDate}<br>
-                        🌐 Network: ${report.network}
-                    </div>
-                    <a href="${report.link}" class="view-button">리포트 보기</a>
+            <div class="report-card">
+                <div class="report-title">MSN 광고 네트워크 분석 - 20250725~20250728</div>
+                <div class="report-meta">
+                    📅 2025-07-25 ~ 2025-07-28<br>
+                    🌐 <span class="network-badge all-networks">All Networks</span>
                 </div>
-            `).join('');
-        }
+                
+                <div class="report-description">
+                    Gemini AI를 활용한 MSN 광고 네트워크 종합 분석 리포트
+                </div>
+                
+                <a href="001_2025-07-25_2025-07-28/index.md" class="view-button">리포트 보기</a>
+            </div>
+            
+        {% else %}
+            <div class="no-reports">
+                <h3>📭 아직 생성된 리포트가 없습니다</h3>
+            </div>
         
-        // Load reports when page loads
-        loadReports();
-    </script>
+    </div>
+    
+    <div class="footer">
+        <p>
+            <small>Last build: 2025-07-28 08:30:53 KST</small>
+        </p>
+    </div>
 </body>
 </html>
