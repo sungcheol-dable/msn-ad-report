@@ -58,36 +58,86 @@
     </div>
     
     <script>
-        // Auto-generate report list from directory structure
-        fetch('index.md')
-            .then(response => response.text())
-            .then(content => {
+        async function loadReports() {
+            try {
                 const reports = [];
+                
+                // Get all directories that match the pattern xxx_yyyy-mm-dd_yyyy-mm-dd
+                const response = await fetch('index.md');
+                const content = await response.text();
                 const lines = content.split('\n');
                 
-                lines.forEach(line => {
-                    const match = line.match(/\[(.+?)\]\((.+?)\)/);
-                    if (match && match[2].includes('_202')) {
-                        const title = match[1];
-                        const link = match[2];
-                        const dateMatch = title.match(/(\d{4}-\d{2}-\d{2})/g);
-                        const networkMatch = title.match(/_([^_]+)$/);
-                        
-                        reports.push({
-                            title: title,
-                            link: link,
-                            dates: dateMatch,
-                            network: networkMatch ? networkMatch[1] : 'All Networks'
-                        });
+                // Extract folder links from index.md
+                const folderPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+                let match;
+                
+                while ((match = folderPattern.exec(content)) !== null) {
+                    const linkText = match[1];
+                    const linkPath = match[2];
+                    
+                    // Only process folder links (not direct file links)
+                    if (linkPath.match(/^\d{3}_\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}/) && !linkPath.includes('.md')) {
+                        try {
+                            // Try to fetch the frontmatter from folder's index.md
+                            const indexResponse = await fetch(`${linkPath}/index.md`);
+                            const indexContent = await indexResponse.text();
+                            
+                            // Extract frontmatter title
+                            const frontmatterMatch = indexContent.match(/^---\s*\n([\s\S]*?)\n---/);
+                            let title = linkText; // fallback to folder name
+                            
+                            if (frontmatterMatch) {
+                                const frontmatter = frontmatterMatch[1];
+                                const titleMatch = frontmatter.match(/^title:\s*(.+)$/m);
+                                if (titleMatch) {
+                                    title = titleMatch[1].replace(/['"]/g, '').trim();
+                                }
+                            }
+                            
+                            // Extract date range and network from folder name
+                            const folderMatch = linkPath.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
+                            const startDate = folderMatch ? folderMatch[1] : '';
+                            const endDate = folderMatch ? folderMatch[2] : '';
+                            const network = folderMatch && folderMatch[3] ? folderMatch[3] : 'All Networks';
+                            
+                            reports.push({
+                                title: title,
+                                link: `${linkPath}/index.md`,
+                                folder: linkPath,
+                                startDate: startDate,
+                                endDate: endDate,
+                                network: network
+                            });
+                        } catch (error) {
+                            console.warn(`Could not load frontmatter for ${linkPath}:`, error);
+                            // Fallback: use folder name
+                            const folderMatch = linkPath.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(.+))?/);
+                            const startDate = folderMatch ? folderMatch[1] : '';
+                            const endDate = folderMatch ? folderMatch[2] : '';
+                            const network = folderMatch && folderMatch[3] ? folderMatch[3] : 'All Networks';
+                            
+                            reports.push({
+                                title: linkText,
+                                link: `${linkPath}/index.md`,
+                                folder: linkPath,
+                                startDate: startDate,
+                                endDate: endDate,
+                                network: network
+                            });
+                        }
                     }
-                });
+                }
+                
+                // Sort reports by folder name (newest first)
+                reports.sort((a, b) => b.folder.localeCompare(a.folder));
                 
                 displayReports(reports);
-            })
-            .catch(() => {
+            } catch (error) {
+                console.error('Error loading reports:', error);
                 document.getElementById('reports').innerHTML = 
                     '<p>Report index를 로드할 수 없습니다. <a href="index.md">index.md</a>를 직접 확인해보세요.</p>';
-            });
+            }
+        }
         
         function displayReports(reports) {
             const container = document.getElementById('reports');
@@ -100,13 +150,16 @@
                 <div class="report-card">
                     <div class="report-title">${report.title}</div>
                     <div class="report-meta">
-                        📅 ${report.dates ? report.dates.join(' ~ ') : 'Date info unavailable'}<br>
+                        📅 ${report.startDate} ~ ${report.endDate}<br>
                         🌐 Network: ${report.network}
                     </div>
                     <a href="${report.link}" class="view-button">리포트 보기</a>
                 </div>
             `).join('');
         }
+        
+        // Load reports when page loads
+        loadReports();
     </script>
 </body>
 </html>
