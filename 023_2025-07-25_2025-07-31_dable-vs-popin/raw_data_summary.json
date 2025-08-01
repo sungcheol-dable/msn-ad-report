@@ -1,0 +1,11 @@
+{
+  "date_range": "2025-07-25 to 2025-07-31",
+  "total_records": 34750,
+  "unique_networks": 2,
+  "unique_pages": 5,
+  "unique_categories": 12,
+  "unique_hosts": 2,
+  "earliest_record": "2025-07-25 12:20:18",
+  "latest_record": "2025-07-31 23:57:56",
+  "avg_position": "34.57"
+}
