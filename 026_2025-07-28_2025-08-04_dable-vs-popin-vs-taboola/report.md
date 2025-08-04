@@ -1,0 +1,130 @@
+# MSN 광고 네트워크 3자 경쟁 분석 리포트
+
+**분석 기간**: 2025년 07월 28일 ~ 2025년 08월 04일 (8일간)  
+**분석 대상**: dable, popin, taboola  
+**분석 유형**: 3자 경쟁 분석  
+
+---
+
+## 📊 데이터 개요
+
+- **총 광고 수**: 131,091개
+- **네트워크 수**: 3개  
+- **페이지 수**: 5개
+- **카테고리 수**: 12개
+- **분석 기간**: 2025-07-28 10:34:21 ~ 2025-08-04 08:21:09
+
+## 🎯 네트워크 전략 분석
+
+### 시장 점유율
+- **taboola**: 49.93 (65,450개 광고)
+- **dable**: 38.0 (49,817개 광고)
+- **popin**: 12.07 (15,824개 광고)
+
+### 전문화 영역
+- **dable**: sports/soccer 전문화 (N/A% 집중도)
+- **popin**: home 전문화 (N/A% 집중도)
+- **taboola**: sports/soccer 전문화 (N/A% 집중도)
+
+## ⏰ 시간적 패턴 분석
+
+### 활동 패턴
+- **피크 시간**: 7:00 (8223개 광고)
+- **일평균 광고**: 21355.6개
+
+## 🏆 경쟁 환경 분석
+
+### 시장 구조
+- **시장 집중도**: Highly Concentrated
+- **HHI 지수**: 2850.78
+- **상위 3개 점유율**: 88.6%
+
+## 📝 광고 문구 분석
+
+
+## ⚡ dable vs popin vs taboola 페이지별 3자 경쟁 분석
+
+### 📋 페이지별 키워드 전략
+
+3자 경쟁 분석에서 각 페이지별로 나타나는 키워드 특성을 분석합니다.
+
+#### sports 페이지 키워드 분석
+
+![sports 키워드 분석](images/page_keywords_sports_dable-popin-taboola_2025-07-28_2025-08-04.png)
+
+sports 페이지에서의 네트워크별 주요 키워드 사용 패턴
+
+#### money 페이지 키워드 분석
+
+![money 키워드 분석](images/page_keywords_money_dable-popin-taboola_2025-07-28_2025-08-04.png)
+
+money 페이지에서의 네트워크별 주요 키워드 사용 패턴
+
+#### home 페이지 키워드 분석
+
+![home 키워드 분석](images/page_keywords_home_dable-popin-taboola_2025-07-28_2025-08-04.png)
+
+home 페이지에서의 네트워크별 주요 키워드 사용 패턴
+
+#### channel-topic 페이지 키워드 분석
+
+![channel-topic 키워드 분석](images/page_keywords_channel-topic_dable-popin-taboola_2025-07-28_2025-08-04.png)
+
+channel-topic 페이지에서의 네트워크별 주요 키워드 사용 패턴
+
+#### video 페이지 키워드 분석
+
+![video 키워드 분석](images/page_keywords_video_dable-popin-taboola_2025-07-28_2025-08-04.png)
+
+video 페이지에서의 네트워크별 주요 키워드 사용 패턴
+
+### 📍 페이지별 광고 위치 전략
+
+각 페이지에서의 네트워크별 광고 위치 전략을 분석합니다.
+
+![페이지별 위치 전략](images/page_position_strategies_dable-taboola_2025-07-28_2025-08-04.png)
+
+광고 위치 분포를 통해 각 네트워크의 경쟁 전략을 파악할 수 있습니다:
+- **상위 25%**: 프리미엄 위치 선점 전략
+- **중상위 26-50%**: 균형잡힌 노출 전략
+- **중하위 51-75%**: 안정적 노출 확보
+- **하위 76-100%**: 광범위 커버리지 전략
+
+### 💡 페이지별 분석 인사이트
+
+**dable vs popin vs taboola 3자 경쟁 구도:**
+- 3개 네트워크 간 페이지별 키워드 전략 차이점 분석
+- 각 페이지에서의 3자 포지션 경쟁 패턴
+- 네트워크별 페이지 특화 영역 및 경쟁 우위 요소
+- 시장 점유율과 페이지별 전략의 상관관계
+
+## 💡 핵심 인사이트
+
+1. Market leader: taboola with 49.93% market share
+2. taboola shows strong market dominance
+3. High page diversity networks: taboola, dable
+4. Specialized networks: taboola (sports), dable (sports)
+5. Peak advertising hour: 7:00 with 8223 ads
+
+## 🔬 분석 방법론
+
+### 데이터 수집
+- **소스**: MSN_AD_CARDS 테이블 (MySQL)
+- **범위**: 지정된 날짜 범위 및 네트워크
+- **접근**: READ-ONLY 연결
+
+### 분석 지표
+- **시장 점유율**: 네트워크별 광고 수 비율
+- **전문화 지수**: 카테고리별 집중도 측정
+- **시간적 패턴**: 시간대별 활동 분포
+- **키워드 분석**: 광고 문구 자연어 처리
+
+### 기술 스택
+- **언어**: Python 3.10+
+- **라이브러리**: pandas, matplotlib, seaborn, kiwipiepy
+- **데이터베이스**: MySQL (pymysql)
+
+---
+
+*리포트 생성일: 2025-08-04 12:19:28*  
+*분석 도구: MSN Ads Info Graphic Generator*  
